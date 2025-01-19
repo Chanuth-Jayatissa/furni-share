@@ -1,15 +1,32 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { handleSignUp } from "./actions";
 
 export default function SignUp() {
+  const router = useRouter();
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    try {
+      await handleSignUp(formData);
+      router.push("/dashboard/donate"); // Redirect to the donate page
+    } catch (error) {
+      console.error("Sign-up failed:", error);
+      alert("Failed to sign up. Please try again."); // Optional: Show an error message
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-900 via-purple-800 to-black text-white">
-      {/* Sign Up Form */}
+      {/* Sign-Up Form */}
       <main className="w-full max-w-2xl bg-gray-800 p-16 rounded-lg shadow-lg mt-32 mb-32">
         <h1 className="text-5xl font-bold text-center mb-10">Sign Up</h1>
 
-        <form action={handleSignUp} method="post" className="space-y-10">
-          {/* Full Name */}
+        <form onSubmit={onSubmit} className="space-y-10">
           <div>
             <label htmlFor="full-name" className="block text-xl font-medium text-gray-300 mb-4">
               Full Name <span className="text-red-500">*</span>
@@ -24,7 +41,6 @@ export default function SignUp() {
             />
           </div>
 
-          {/* Username */}
           <div>
             <label htmlFor="username" className="block text-xl font-medium text-gray-300 mb-4">
               Username <span className="text-red-500">*</span>
@@ -39,7 +55,6 @@ export default function SignUp() {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label htmlFor="password" className="block text-xl font-medium text-gray-300 mb-4">
               Password <span className="text-red-500">*</span>
@@ -54,7 +69,6 @@ export default function SignUp() {
             />
           </div>
 
-          {/* Location */}
           <div>
             <label htmlFor="location" className="block text-xl font-medium text-gray-300 mb-4">
               Location (City) <span className="text-red-500">*</span>
@@ -69,11 +83,9 @@ export default function SignUp() {
             />
           </div>
 
-          {/* Payment Information */}
           <fieldset className="space-y-6">
             <legend className="text-xl font-medium text-gray-300">Payment Information (Optional)</legend>
 
-            {/* Venmo */}
             <div>
               <label htmlFor="venmo" className="block text-lg text-gray-300 mb-2">
                 Venmo Username
@@ -87,7 +99,6 @@ export default function SignUp() {
               />
             </div>
 
-            {/* CashApp */}
             <div>
               <label htmlFor="cashapp" className="block text-lg text-gray-300 mb-2">
                 CashApp Username
@@ -111,8 +122,8 @@ export default function SignUp() {
         </form>
 
         <p className="text-center text-xl text-gray-300 mt-10">
-          Already have an account?{' '}
-          <Link href="/signin" className="text-blue-400 hover:underline">
+          Already have an account?{" "}
+          <Link href="/signIn" className="text-blue-400 hover:underline">
             Sign in
           </Link>
         </p>
